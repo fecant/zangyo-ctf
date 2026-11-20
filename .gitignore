@@ -1,0 +1,8 @@
+node_modules/
+*.log
+data/
+
+# 赛事相关，不随源码公开
+WRITEUP.md
+DEPLOY.md
+._*

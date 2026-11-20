@@ -1,0 +1,9 @@
+{
+  "name": "catgirl-ctf",
+  "version": "1.0.0",
+  "private": true,
+  "description": "残業 — 一个多阶段 Web 密室（信息泄露 / IDOR / 上传绕过 / SSRF / 命令注入）",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" }
+}
