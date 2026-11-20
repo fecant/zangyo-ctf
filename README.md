@@ -11,7 +11,7 @@
 PORT=3000 node server.js
 
 # 或 Docker
-docker run --rm -p 3000:3000 -e CTF_FLAG='flag{your_flag_here}' ghcr.io/OWNER/zangyo-ctf:latest
+docker run --rm -p 3000:3000 -e CTF_FLAG='flag{your_flag_here}' ghcr.io/fecant/zangyo-ctf:latest
 ```
 
 打开 http://localhost:3000
@@ -38,10 +38,10 @@ flag 会被均分成 5 段，五个阶段各暴露一段。**只完成部分阶�
 
 ## 部署到容器平台
 
-镜像发布在 `ghcr.io/OWNER/zangyo-ctf`（由 GitHub Actions 自动构建）。任何支持 Docker 的平台都能跑：
+镜像发布在 `ghcr.io/fecant/zangyo-ctf`（由 GitHub Actions 自动构建）。任何支持 Docker 的平台都能跑：
 
-- **Render / Koyeb / Fly.io**：新建 Web Service，镜像填 `ghcr.io/OWNER/zangyo-ctf:latest`，端口 `3000`
-- **VPS**：`docker run -d --restart=always -p 80:3000 -e CTF_FLAG='...' ghcr.io/OWNER/zangyo-ctf:latest`
+- **Render / Koyeb / Fly.io**：新建 Web Service，镜像填 `ghcr.io/fecant/zangyo-ctf:latest`，端口 `3000`
+- **VPS**：`docker run -d --restart=always -p 80:3000 -e CTF_FLAG='...' ghcr.io/fecant/zangyo-ctf:latest`
 - **CTF 平台（GZCTF 等）**：镜像 tag 填同一个地址，http 端口 `3000`，环境变量 `CTF_FLAG`，静态答案关闭
 
 > 不适合 Vercel / Netlify / GitHub Pages —— 它们是静态托管或函数式运行时，本项目需要常驻监听端口。
