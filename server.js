@@ -153,14 +153,11 @@ a{color:inherit;text-decoration:none}
   linear-gradient(180deg,rgba(13,13,13,.92) 0%,rgba(13,13,13,.66) 34%,rgba(13,13,13,.62) 60%,rgba(13,13,13,.82) 88%,#0d0d0d 100%)}}
 nav{display:flex;align-items:center;gap:44px;padding:38px 0 0}
 nav .brand{font-size:15px;font-weight:700;letter-spacing:.01em;margin-right:8px}
-nav a.link{font-size:13.5px;color:var(--dim);letter-spacing:.02em;transition:color .18s}
-nav a.link:hover{color:#fff}
+nav a.link{font-size:13.5px;color:var(--dim);letter-spacing:.02em}
 nav .right{margin-left:auto;display:flex;gap:12px;align-items:center}
-.btn{display:inline-block;padding:11px 22px;font-size:12.5px;letter-spacing:.06em;border:1px solid transparent;transition:.18s;cursor:pointer;background:none;color:inherit;font-family:inherit}
+.btn{display:inline-block;padding:11px 22px;font-size:12.5px;letter-spacing:.06em;border:1px solid transparent;cursor:pointer;background:none;color:inherit;font-family:inherit}
 .btn.solid{background:#fff;color:#101010}
-.btn.solid:hover{background:#e2e2e2}
 .btn.ghost{border-color:#3a3a3a;color:#d8d8d8}
-.btn.ghost:hover{border-color:#6a6a6a;color:#fff}
 .hero{display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:24px;min-height:74vh;padding:26px 0 40px}
 h1.big{font-size:clamp(74px,11.4vw,176px);line-height:.86;letter-spacing:-.045em;font-weight:800}
 .lead{margin-top:56px;max-width:520px;color:#b4b4b4;font-size:15px;line-height:1.8}
@@ -168,7 +165,7 @@ h1.big{font-size:clamp(74px,11.4vw,176px);line-height:.86;letter-spacing:-.045em
 .actions{margin-top:34px;display:flex;gap:14px;align-items:center}
 .actions .plain{font-size:12.5px;letter-spacing:.06em;color:#c9c9c9;display:flex;gap:9px;align-items:center}
 .dot{width:26px;height:26px;border-radius:50%;border:1px solid #4a4a4a;display:grid;place-items:center;font-size:9px}
-.scroll{margin-top:52px;font-size:12.5px;color:#7d7d7d;display:flex;gap:10px;align-items:center}
+.scroll{margin-top:52px;font-size:12.5px;color:var(--dim);display:flex;gap:10px;align-items:center}
 .orb{position:relative;justify-self:end;width:min(100%,540px);aspect-ratio:1;border-radius:50%;overflow:hidden;
   box-shadow:0 0 0 1px #1d1d1d, 0 40px 120px rgba(0,0,0,.9) inset}
 .orb img{width:100%;height:100%;object-fit:cover;object-position:38% 42%;filter:brightness(.98) contrast(1.04) saturate(.95)}
@@ -180,11 +177,11 @@ h1.big{font-size:clamp(74px,11.4vw,176px);line-height:.86;letter-spacing:-.045em
 @media(max-width:900px){.hero{grid-template-columns:1fr;min-height:auto;padding-top:10px}.orb{justify-self:start;width:min(100%,420px);order:-1}h1.big{font-size:clamp(56px,16vw,96px)}.cards{grid-template-columns:1fr}.card{border-right:none;border-bottom:1px solid var(--line)}nav{gap:22px;flex-wrap:wrap}.wrap{padding:0 22px}}
 .cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-top:1px solid var(--line);margin-top:8px}
 .card{padding:26px 26px 30px;border-right:1px solid var(--line)}
-.card:last-child{border-right:none}a.card{display:block;color:inherit;transition:background .18s}a.card:hover{background:#111}
-.card .tag{font-size:10.5px;letter-spacing:.16em;color:#7a7a7a;margin-bottom:10px}
+.card:last-child{border-right:none}a.card{display:block;color:inherit}
+.card .tag{font-size:10.5px;letter-spacing:.16em;color:#8d8d8d;margin-bottom:10px}
 .card .t{font-size:13px;color:#cfcfcf;letter-spacing:.02em;line-height:1.6}
 .card .s{font-size:12px;color:#8d8d8d;margin-top:8px}
-footer{padding:40px 0 60px;color:#7d7d7d;font-size:11.5px;letter-spacing:.04em;display:flex;gap:18px}
+footer{padding:40px 0 60px;color:var(--dim);font-size:11.5px;letter-spacing:.04em;display:flex;gap:18px}
 
 /* 内页 */
 .article{margin-top:34px}
@@ -204,10 +201,10 @@ footer{padding:40px 0 60px;color:#7d7d7d;font-size:11.5px;letter-spacing:.04em;d
 .joke b{color:#fff;font-weight:600}
 .say{color:#c9c9c9;font-size:14px;border-left:2px solid #3a3a3a;padding-left:16px;margin-top:22px}
 .say b{color:#fff;font-weight:600}
-label{display:block;font-size:11px;letter-spacing:.12em;color:#7a7a7a;margin:14px 0 7px}
+label{display:block;font-size:11px;letter-spacing:.12em;color:#8d8d8d;margin:14px 0 7px}
 input[type=text],input[type=password],textarea,select{
   width:100%;background:#0a0a0a;border:1px solid #2e2e2e;color:#f2f2f2;padding:11px 13px;
-  font-size:13.5px;font-family:inherit;outline:none}
+  font-size:13.5px;font-family:inherit}
 input:focus,textarea:focus{border-color:#5a5a5a}
 textarea{min-height:110px;resize:vertical;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px}
 .row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
@@ -228,7 +225,7 @@ pre.out{margin-top:16px;background:#080808;border:1px solid #242424;padding:14px
   font-family:ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;line-height:1.75}
 ul.list{list-style:none;margin-top:10px}
 ul.list li{padding:9px 0;border-bottom:1px solid #1e1e1e;font-size:13px;display:flex;gap:14px;justify-content:space-between}
-ul.list li span.id{color:#7c7c7c;font-family:ui-monospace,Menlo,monospace;font-size:12px}
+ul.list li span.id{color:var(--dim);font-family:ui-monospace,Menlo,monospace;font-size:12px}
 
 /* 提示页 */
 .tipbar{margin-top:22px;display:flex;align-items:center;gap:14px;font-size:11px;letter-spacing:.14em;color:#8d8d8d}
@@ -237,11 +234,212 @@ ul.list li span.id{color:#7c7c7c;font-family:ui-monospace,Menlo,monospace;font-s
 .tipcap{font-size:11px;color:#8d8d8d;letter-spacing:.05em;margin-bottom:6px}
 .tipcard{margin-top:18px;border:1px solid var(--line);border-left:2px solid #3f3f3f;
   background:rgba(16,16,16,.92);padding:20px 22px;
-  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:border-color .2s,background .2s}
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .tipno{font-size:10.5px;letter-spacing:.18em;color:#9a9a9a;margin-bottom:12px}
 .tipsay{color:#c9c9c9;font-size:14.5px;line-height:1.95}
 .tipsay b{color:#fff;font-weight:600}
 .tipsay i{color:#a8a8a8;font-style:normal;font-size:14.5px}
+
+/* ============================================================================
+   动效 / 交互规范落地（01-motion.md v? + 02-interaction.md v1.1）
+   五条铁律：
+   1) 基线永远是"内容可见"，所有 opacity:0 / transform 起始态只写在
+      @media (prefers-reduced-motion:no-preference) 里；
+   2) 绝不给 .panel / .joke / .tipcard / .stagebg / .wrap / body 加 transform——
+      它们带 backdrop-filter，加 transform 会重建 backdrop root，磨砂当场失效；
+   3) 颜色只允许出现在 transition，不允许出现在 @keyframes；
+   4) 带 fill-mode:both 的动画，末帧必须是惰性终态（opacity:0 或元素本该有的静态终态），
+      视觉正确性不能押在 animationend / classList 清理上（断点外不触发就会留下一层永久的白）；
+   5) 任何"事件加上去、另一个事件摘掉"的状态，先问中间那条路径取消了会怎样：
+      Esc 取消导航没有 pageshow、断点外没有 animationend。扛不住取消的状态就不要引入。
+   ========================================================================== */
+
+/* 2.5 一次性 token 块：后续效果只能引用 token，禁止裸数值 */
+:root{
+  --m-dur-1:90ms;--m-dur-2:160ms;--m-dur-3:240ms;--m-dur-4:380ms;--m-dur-5:520ms;--m-dur-6:700ms;
+  --m-ease-out:cubic-bezier(.22,.61,.36,1);
+  --m-ease-snap:cubic-bezier(.16,1,.3,1);
+  --m-ease-glide:cubic-bezier(.19,1,.22,1);
+  --m-ease-in:cubic-bezier(.55,.06,.68,.19);
+  --m-ease-line:cubic-bezier(.4,0,.2,1);
+  --m-ease-step:steps(5,end);
+  --m-dx-1:2px;--m-dx-2:6px;--m-dx-3:12px;--m-dx-4:22px;--m-dx-5:40px;--m-dx-6:30px;
+  --m-scale-in:.985;--m-scale-orb:.965;--m-scale-bg:1.045;
+  --m-d-1:0ms;--m-d-2:90ms;--m-d-3:200ms;--m-d-4:300ms;--m-d-5:380ms;--m-d-6:560ms;
+  --m-stagger:70ms;--m-line-stagger:22ms;
+  --m-blur-1:8px;--m-blur-2:10px;
+}
+/* 过渡属性白名单（替换掉原先 .18s / .2s 的裸写法） */
+.btn,nav a.link,a.card,.tipcard,.chip,ul.list li{
+  transition:color var(--m-dur-2) var(--m-ease-line),
+             background-color var(--m-dur-2) var(--m-ease-line),
+             border-color var(--m-dur-2) var(--m-ease-line),
+             box-shadow var(--m-dur-2) var(--m-ease-line),
+             transform var(--m-dur-2) var(--m-ease-line);
+}
+
+/* 3. 入场基元：m-rise / m-light / m-fade / m-scan（keyframes 本身是惰性的） */
+@keyframes m-rise-sm{from{opacity:0;transform:translate3d(0,var(--m-dx-2),0)}to{opacity:1;transform:translate3d(0,0,0)}}
+@keyframes m-rise{from{opacity:0;transform:translate3d(0,var(--m-dx-3),0)}to{opacity:1;transform:translate3d(0,0,0)}}
+@keyframes m-rise-lg{from{opacity:0;transform:translate3d(0,var(--m-dx-4),0)}to{opacity:1;transform:translate3d(0,0,0)}}
+@keyframes m-rise-xl{from{opacity:0;transform:translate3d(0,var(--m-dx-6),0)}to{opacity:1;transform:translate3d(0,0,0)}}
+@keyframes m-light{from{opacity:0;transform:scale(var(--m-scale-orb))}to{opacity:1;transform:scale(1)}}
+@keyframes m-fade{from{opacity:0}to{opacity:1}}
+/* m-scan（V1 最终版）：亮带放在渐变下缘 100%，行程 -100% -> 0 才覆盖整块；
+   末帧 opacity:0 是惰性终态——视觉正确性不能押在 animationend 清理上 */
+@keyframes m-scan{
+  from{opacity:0;transform:translateY(-100%)}
+  20%{opacity:1}
+  80%{opacity:1}
+  to{opacity:0;transform:translateY(0)}
+}
+
+/* 6.1 标题拆字：残 0ms / 業 70ms。
+   整块 h1 无法只让第二个字晚 70ms，所以用两个 inline-block 子元素分两层；
+   两条 span 之间不写空白，复制粘贴仍是"残業"；letter-spacing 从 h1 继承，字距不变 */
+h1.big .ch{display:inline-block}
+/* 5.2 主视觉：位移挂 .orb（JS 写 --m-oy），缩放挂 .orb img——
+   对带 border-radius/overflow 的 .orb 本体做 scale 会让裁切与阴影逐帧重算 */
+.orb{transform:translate3d(0,var(--m-oy,0px),0)}
+/* 5.1 背景垫量与视差：先 scale(1.045) 再位移，位移上限 ±1.1%（JS 写 --m-py） */
+.stagebg{transform:scale(var(--m-scale-bg)) translate3d(0,var(--m-py,0%),0);transform-origin:50% 30%}
+
+/* 2. 首屏入场：纯 CSS，不依赖 JS。js 未执行也照常播，只是退化为静态终态 */
+@media (prefers-reduced-motion:no-preference){
+  .hero h1.big .ch{animation:m-rise-xl var(--m-dur-6) var(--m-ease-glide) both;will-change:opacity,transform}
+  .hero h1.big .ch:first-child{animation-delay:var(--m-d-1)}
+  .hero h1.big .ch:last-child{animation-delay:var(--m-d-2)}
+  .hero .lead{animation:m-rise var(--m-dur-5) var(--m-ease-glide) var(--m-d-3) both}
+  .hero .actions{animation:m-rise-sm var(--m-dur-5) var(--m-ease-glide) var(--m-d-4) both}
+  .hero .orb{animation:m-fade var(--m-dur-6) var(--m-ease-out) var(--m-d-5) both;will-change:opacity}
+  .hero .orb img{animation:m-light var(--m-dur-6) var(--m-ease-out) var(--m-d-5) both}
+  .hero .scroll{animation:m-fade var(--m-dur-4) var(--m-ease-out) var(--m-d-6) both}
+}
+
+/* 内页首访入场：只在该路径第一次进入时播（JS 加 .enter-page），
+   提交后整页重载不会重播；只碰头部三件，.panel 的磨砂不做 transform */
+@media (prefers-reduced-motion:no-preference){
+  html.enter-page .page > .kicker{animation:m-rise-sm var(--m-dur-4) var(--m-ease-glide) var(--m-d-1) both}
+  html.enter-page .page > h2{animation:m-rise-xl var(--m-dur-6) var(--m-ease-glide) var(--m-d-2) both}
+  html.enter-page .page > .say{animation:m-rise var(--m-dur-5) var(--m-ease-glide) var(--m-d-3) both}
+}
+/* 打印与"动画不跑"的环境兜底：入场动画一旦停摆，fill:both 会让元素停在 opacity:0 */
+@media print{*{animation:none!important;transition:none!important}}
+
+/* 8. 加班费到账：机械步进逐格亮起，和 chip 入账共用"继电器"语言 */
+@keyframes m-chip-on{from{opacity:.28}to{opacity:1}}
+@media (prefers-reduced-motion:no-preference){
+  .parts .chip.on{animation:m-chip-on var(--m-dur-3) steps(3,end) both}
+  .parts .chip.on:nth-of-type(3){animation-delay:calc(var(--m-stagger)*1)}
+  .parts .chip.on:nth-of-type(4){animation-delay:calc(var(--m-stagger)*2)}
+  .parts .chip.on:nth-of-type(5){animation-delay:calc(var(--m-stagger)*3)}
+  .parts .chip.on:nth-of-type(6){animation-delay:calc(var(--m-stagger)*4)}
+}
+/* 9. 大图淡入：隐藏态只挂在 html.js 下，无 JS 时图片照常可见 */
+html.js .lazy-img{opacity:0;transition:opacity var(--m-dur-6) var(--m-ease-out)}
+html.js .lazy-img.is-loaded{opacity:1}
+/* 10. 404：背景缓慢失焦，一次性，forwards 停住不再回焦 */
+@keyframes m-defocus{
+  from{filter:brightness(.96) saturate(.98) contrast(1.02) blur(0)}
+  to{filter:brightness(.78) saturate(.6) contrast(1.02) blur(5px)}
+}
+@media (prefers-reduced-motion:no-preference){.stagebg.soft{animation:m-defocus 9s var(--m-ease-out) forwards}}
+/* 3.4 / 6.1 首页不抑制内页入场，但历史回退必须零入场 */
+html.no-enter .hero h1.big .ch,html.no-enter .hero .lead,html.no-enter .hero .actions,
+html.no-enter .hero .scroll,html.no-enter .hero .orb,html.no-enter .hero .orb img{animation:none!important}
+/* 只有历史回退才零入场；站内导航与刷新都播完整入场——
+   之前"二次访问压到 240ms"正是"一刷新就太快"的元凶 */
+
+/* 3. 滚动 reveal（JS 增强）：隐藏态只挂在 html.js 上，
+   一行 classList.remove('js') 就能让全站退回静态可用态 */
+.reveal{will-change:auto}
+html.js .reveal{opacity:0;transform:translate3d(0,var(--m-dx-3),0)}
+html.js .reveal.in{opacity:1;transform:none;
+  transition:opacity var(--m-dur-4) var(--m-ease-out),transform var(--m-dur-4) var(--m-ease-out)}
+html.js .reveal.in.instant{transition:none}
+
+/* 4. 焦点可见性：焦点环必须瞬时，任何延迟都算无障碍缺陷 */
+:focus-visible{outline:2px solid #e8e8e8;outline-offset:3px;transition:none;animation:none}
+/* 输入类不做 :focus-visible 门控：焦点态本身就是任务状态（02 §5.1 / V3） */
+input:focus,textarea:focus,select:focus{outline:2px solid #e8e8e8;outline-offset:1px;border-color:#6a6a6a}
+nav a.link:focus-visible{outline-offset:4px}
+a.card:focus-visible{outline-offset:-2px}
+pre.out:focus-visible{outline:1px solid var(--dim);outline-offset:-2px}
+main:focus{outline:none}
+
+/* 5. skip link：全站唯一被键盘唤起时出现的"白块" */
+.skip{position:fixed;left:-9999px;top:0;z-index:99;background:#fff;color:#101010;
+  padding:10px 16px;font-size:12.5px;letter-spacing:.06em;border:1px solid #fff}
+.skip:focus{left:0;top:0}
+
+/* 7. .outlabel：取代"没有绑定控件的 label 元素"（非法用法）。
+   颜色走 var(--dim)：灰阶已收敛成 3 档（原来最低的三档灰已全部并入 --dim），
+   层级改由字号与字距承担 */
+.outlabel{display:block;font-size:11px;letter-spacing:.12em;color:var(--dim);margin:18px 0 7px}
+
+/* 8. 结果块扫光：::after 绝对定位 + pointer-events:none，只动 transform/opacity。
+   亮带在渐变下缘（100%），行程 -100% -> 0 全程零正溢出，不闪滚动条也不动 scrollHeight（V1）。
+   基线写 opacity:0，所以断点外 / 动画缺席时它只是一块看不见的伪元素，不靠清理事件收尾 */
+pre.out{position:relative}
+pre.out.fresh::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,.04) 55%,
+    rgba(255,255,255,.14) 88%,
+    rgba(255,255,255,.19) 100%);
+  opacity:0}
+@media (prefers-reduced-motion:no-preference) and (min-width:901px){
+  pre.out.fresh::after{animation:m-scan var(--m-dur-5) var(--m-ease-step) both}
+}
+
+/* 9. 全站不存在"提交中 / 等待中"视觉。纯 CSS 无法"保持到跳转"，任何近似
+   （拿语义属性当样式钩子、挂 .busy class、用 focus-within）都会在用户按 Esc
+   取消或请求 500 后把按钮永久留在半透明态，看起来像禁用。
+   浏览器自己的 tab spinner 已经在做等待信号，真正的"结果到了"信号是下一页 pre.out 的落定。
+   只保留按压反馈 ↓ */
+
+/* 10. 悬停态只给真指针设备；触屏用 :active 换同等强度的回执 */
+@media (hover:hover) and (pointer:fine){
+  nav a.link:hover{color:#fff}
+nav a.link[aria-current]{color:#fff;position:relative}
+nav a.link[aria-current]::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:1px;background:currentColor;opacity:.5}
+  .btn.solid:hover{background:#e2e2e2}
+  .btn.ghost:hover{border-color:#6a6a6a;color:#fff}
+  a.card:hover{background:#111}
+  .tipcard:hover{border-left-color:#6a6a6a}
+  ul.list li:hover{background:#0f0f0f}
+}
+/* iOS 不对非链接/非按钮元素派发 :active，所以 .tipcard（一个 div）只能静态兜底，
+   不做状态切换；a / button 的 :active 在 iOS 上正常 */
+@media (hover:none){
+  .btn.solid:active{background:#e2e2e2}
+  .btn.ghost:active{border-color:#6a6a6a;color:#fff}
+  a.card:active{background:#111}
+  .tipcard{border-left-color:#5a5a5a}
+}
+/* 按压反馈：抬起即复位，终止由指针物理状态保证，不依赖任何清理事件 */
+.btn.solid:active{transform:translateY(1px)}
+.btn:active{opacity:.55;transition-duration:var(--m-dur-1)}
+
+/* 8.4 移动端：拆字分层与延迟阶梯关掉（时长不变） */
+@media (max-width:900px){
+  .hero h1.big .ch{animation-delay:0ms!important}
+  .hero .lead{animation-delay:var(--m-d-1)!important}
+  .hero .actions{animation-delay:var(--m-d-2)!important}
+  .hero .orb,.hero .orb img,.hero .scroll{animation-delay:var(--m-d-3)!important}
+}
+
+/* 11. 降级：结构性门控（上面所有 no-preference）+ 一条安全网，两套都要有。
+   注意 animation-duration:.001ms 对 animation-timeline 无效，所以视差靠 JS 门控而不是靠这里 */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms!important;animation-delay:0ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.001ms!important;transition-delay:0ms!important;
+    scroll-behavior:auto!important;
+  }
+  .flagline{border-color:#fff}
+}
 `;
 
 /* 页面背景图：按 layout 的标题取 [文件名, 焦点, 亮度] */
@@ -273,26 +471,83 @@ function layout(title, body, s, bg) {
   const bgLum = pick && pick[2] ? pick[2] : .55;
   const bgSat = pick && pick[3] ? pick[3] : 1.04;
   const backdrop = bgFile
-    ? `<div class="stagebg" style="background-image:url('/assets/${bgFile}');background-position:${bgPos};filter:brightness(${bgLum}) saturate(${bgSat}) contrast(1.02)"></div><div class="veil"></div>`
+    ? `<div class="stagebg${title === '404' ? ' soft' : ''}" style="background-image:url('/assets/${bgFile}');background-position:${bgPos};filter:brightness(${bgLum}) saturate(${bgSat}) contrast(1.02)"></div><div class="veil"></div>`
     : '';
+  const cur = { '首页': '/', '关于本喵': '/about', '打卡': '/lobby', '工资单': '/lobby', '头像上传': '/lobby', '链接预览': '/lobby', '日志检索': '/lobby', '结局': '/end' }[title] || '';
+  const navLink = (t, h) => `<a class="link" href="${h}"${cur === h ? ' aria-current="page"' : ''}>${t}</a>`;
   return `<!doctype html><html lang="zh"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)} · 残業</title>
-<style>${CSS}</style></head><body>
+<style>${CSS}</style>
+<script>(function(){var d=document.documentElement,R=!1,x,seen=!1,i;
+try{R=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
+try{x=performance.getEntriesByType('navigation')[0]}catch(e){}
+var back=!!x&&x.type==='back_forward';
+if(back)d.classList.add('no-enter');else{
+try{seen=!!sessionStorage.getItem('seen')}catch(e){}
+if(seen)d.classList.add('short-enter');else{try{sessionStorage.setItem('seen','1')}catch(e){}}}
+var p='p:'+location.pathname,fe=0;
+if(!back){try{fe=!sessionStorage.getItem(p);if(fe)sessionStorage.setItem(p,1)}catch(e){}}
+if(fe&&location.pathname!=='/')d.classList.add('enter-page');
+var IO=!!window.IntersectionObserver&&!R;
+if(IO)d.classList.add('js');
+function init(){try{
+if(IO){
+var SK='.panel,.joke,.tipcard,.stagebg,.veil,.wrap,ul.list';
+var els=[].filter.call(document.querySelectorAll('.page > *,.cards > *,.article > p,.panel > *,.list li'),function(el){return !el.matches(SK)});
+var io=new IntersectionObserver(function(es){for(var j=0;j<es.length;j++){if(es[j].isIntersecting){es[j].target.classList.add('in');io.unobserve(es[j].target)}}},{rootMargin:'0px 0px 120px 0px',threshold:0});
+var vh=innerHeight;
+for(i=0;i<els.length;i++){if(els[i].getBoundingClientRect().top<vh+120)els[i].classList.add('reveal','in','instant');else{els[i].classList.add('reveal');io.observe(els[i])}}
+setTimeout(function(){for(var j=0;j<els.length;j++){if(!els[j].classList.contains('in'))els[j].classList.add('in','instant')}},2000)}
+var res=document.querySelector('.flagline')||[].slice.call(document.querySelectorAll('pre.out')).pop();
+if(res&&!back){res.classList.add('in','instant');res.classList.add('fresh');
+res.addEventListener('animationend',function h(e){if(e.target!==res)return;res.classList.remove('fresh');res.removeEventListener('animationend',h)});
+var r=res.getBoundingClientRect();
+if(r.top>=innerHeight||r.bottom<=0)res.scrollIntoView({block:'nearest',behavior:'auto'});
+try{res.focus({preventScroll:!0})}catch(e){}}
+var bg=document.querySelector('.stagebg'),orb=document.querySelector('.orb');
+if(!R&&innerWidth>900&&(bg||orb)){
+var t=0,tick=function(){t=0;var p=Math.min((pageYOffset||0)/(innerHeight||1),1);
+if(bg)bg.style.setProperty('--m-py',(-1.1+2.2*p).toFixed(2)+'%');
+if(orb)orb.style.setProperty('--m-oy',(-40*p).toFixed(1)+'px')};
+addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(tick)},{passive:!0});tick()}
+var li=document.querySelectorAll('img.lazy-img');
+for(var k=0;k<li.length;k++){(function(im){
+if(im.complete&&im.naturalWidth){im.classList.add('is-loaded')}else{
+im.addEventListener('load',function(){im.classList.add('is-loaded')},{once:!0});
+im.addEventListener('error',function(){im.classList.add('is-loaded')},{once:!0})}})(li[k])}
+var b=document.querySelector('nav .brand');
+if(b){var nc=0,nt=0;b.onclick=function(){var w=Date.now();if(w-nt>1600)nc=0;nt=w;
+if(++nc<5)return;nc=0;var s=b.querySelector('#egg');
+if(!s){s=document.createElement('span');s.id='egg';s.textContent='…别点了喵';
+s.style.cssText='font:11px/1.6 inherit;color:#8d8d8d;margin-left:8px;opacity:0;transition:opacity .24s';
+b.appendChild(s);requestAnimationFrame(function(){s.style.opacity=1})}
+s.style.opacity=1;clearTimeout(b._t);b._t=setTimeout(function(){s.style.opacity=0},2200)}}
+}catch(e){d.classList.remove('js')}}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+addEventListener('pageshow',function(e){try{
+if(e.persisted){d.classList.add('no-enter');
+var a=document.getAnimations?document.getAnimations():[];
+for(var j=0;j<a.length;j++){try{a[j].finish()}catch(_){}}}
+}catch(_){}});
+})();</script></head><body>
+<a class="skip" href="#main">跳到主内容</a>
 ${backdrop}
 <div class="wrap">
 <nav>
   <div class="brand">残業</div>
-  <a class="link" href="/">首页</a>
-  <a class="link" href="/about">关于本喵</a>
-  <a class="link" href="/lobby">打卡</a>
-  <a class="link" href="/end">结局</a>
+  ${navLink('首页', '/')}
+  ${navLink('关于本喵', '/about')}
+  ${navLink('打卡', '/lobby')}
+  ${navLink('结局', '/end')}
   <div class="right">
     <a class="btn ghost" href="/lobby">登录</a>
     <a class="btn solid" href="/lobby">开始受苦</a>
   </div>
 </nav>
+<main id="main" tabindex="-1">
 ${body}
+</main>
 <footer><span>© 残業 / NOMAD</span><span>本喵什么都没做错喵</span></footer>
 </div></body></html>`;
 }
@@ -309,7 +564,7 @@ function pageHome(s) {
   return layout('首页', `
 <div class="hero">
   <div>
-    <h1 class="big">残業</h1>
+    <h1 class="big"><span class="ch">残</span><span class="ch">業</span></h1>
     <p class="lead">
       一个关于打卡、报销、还有一点点无法解释的恶意的故事喵<br>
       你只要顺着走就行，别问为什么喵，<em>反正问了也没有答案喵</em>
@@ -339,7 +594,7 @@ function pageColumn(s) {
   <div class="kicker">专栏 · 第 0 篇</div>
   <h2>为什么大家都觉得是本喵的错喵</h2>
   <div class="article">
-    <img src="/assets/column.png" alt="">
+    <img class="lazy-img" src="/assets/column.png" alt="" loading="lazy" decoding="async">
     <p>今天又被社长吊了喵</p>
     <p>他说本喵的周报写得像遗书，本喵说那正好，省一份喵</p>
     <p>回来的路上本喵才想起来，今天只有一份饭钱喵</p>
@@ -389,12 +644,12 @@ function pageLobby(s, msg) {
   <div class="panel">
     <form method="post" action="/login">
       <div class="row">
-        <div><label>工号</label><input type="text" name="u" autocomplete="off" placeholder="nomad"></div>
-        <div><label>密码</label><input type="password" name="p" placeholder="********"></div>
+        <div><label for="f-u">工号</label><input id="f-u" type="text" name="u" autocomplete="username" placeholder="nomad"></div>
+        <div><label for="f-p">密码</label><input id="f-p" type="password" name="p" autocomplete="current-password" placeholder="********"></div>
         <div style="flex:0 0 auto"><button class="btn solid" type="submit">打卡</button></div>
       </div>
     </form>
-    ${msg ? `<pre class="out">${esc(msg)}</pre>` : ''}
+    ${msg ? `<div class="outlabel" id="out-lbl-lobby">打卡结果</div><pre class="out" tabindex="0" aria-labelledby="out-lbl-lobby">${esc(msg)}</pre>` : ''}
     <div class="note">提示：机器不会告诉你密码喵，但机器也不懂得藏东西喵</div>
   </div>
   ${tipLink(1)}
@@ -415,11 +670,11 @@ function pagePayslip(s, out) {
   <div class="panel">
     <form method="get" action="/s2">
       <div class="row">
-        <div><label>查询工号（id）</label><input type="text" name="id" value="1042"></div>
+        <div><label for="f-id">查询工号（id）</label><input id="f-id" type="text" name="id" inputmode="numeric" value="1042"></div>
         <div style="flex:0 0 auto"><button class="btn ghost" type="submit">查询</button></div>
       </div>
     </form>
-    ${out ? `<pre class="out">${esc(out)}</pre>` : ''}
+    ${out ? `<div class="outlabel" id="out-lbl-s2">工资单查询结果</div><pre class="out" tabindex="0" aria-labelledby="out-lbl-s2">${esc(out)}</pre>` : ''}
     <div class="note">接口是 GET 的喵，本喵懒得改喵</div>
   </div>
   ${tipLink(2)}
@@ -444,14 +699,14 @@ function pageUpload(s, out, list) {
   <div class="panel">
     <form method="post" action="/s3/upload">
       <div class="row">
-        <div><label>文件名</label><input type="text" name="name" placeholder="avatar.txt"></div>
+        <div><label for="f-name">文件名</label><input id="f-name" type="text" name="name" placeholder="avatar.txt"></div>
       </div>
-      <label>内容</label>
-      <textarea name="content" placeholder="本喵的头像喵"></textarea>
+      <label for="f-content">内容</label>
+      <textarea id="f-content" name="content" placeholder="本喵的头像喵"></textarea>
       <div style="margin-top:16px"><button class="btn solid" type="submit">上传</button></div>
     </form>
-    ${out ? `<pre class="out">${esc(out)}</pre>` : ''}
-    <label style="margin-top:20px">已上传</label>
+    ${out ? `<div class="outlabel" id="out-lbl-s3">上传结果</div><pre class="out" tabindex="0" aria-labelledby="out-lbl-s3">${esc(out)}</pre>` : ''}
+    <div class="outlabel">已上传</div>
     ${files}
   </div>
   ${tipLink(3)}
@@ -472,11 +727,11 @@ function pagePreview(s, out, url) {
   <div class="panel">
     <form method="get" action="/s4">
       <div class="row">
-        <div><label>要预览的地址</label><input type="text" name="url" value="${esc(url || '')}" placeholder="http://127.0.0.1:${INNER_ACTIVE}/intranet/"></div>
+        <div><label for="f-url">要预览的地址</label><input id="f-url" type="text" name="url" inputmode="url" value="${esc(url || '')}" placeholder="http://127.0.0.1:${INNER_ACTIVE}/intranet/"></div>
         <div style="flex:0 0 auto"><button class="btn ghost" type="submit">预览</button></div>
       </div>
     </form>
-    ${out ? `<pre class="out">${esc(out)}</pre>` : ''}
+    ${out ? `<div class="outlabel" id="out-lbl-s4">预览结果</div><pre class="out" tabindex="0" aria-labelledby="out-lbl-s4">${esc(out)}</pre>` : ''}
     <div class="note">本喵有黑名单的喵，很严格的喵</div>
   </div>
   ${tipLink(4)}
@@ -486,6 +741,14 @@ function pagePreview(s, out, url) {
 
 /* ---------------- 第 5 关：日志检索（命令注入） ---------------- */
 function pageConsole(s, cmd, out, q) {
+  /* 结果块模板：label 用 .outlabel（不是 <label>——它没有绑定控件），
+     pre 带 tabindex=0（可被程序化聚焦 + 键盘滚动），可访问名来自前面那行小标签 */
+  const block = (id, label, text) =>
+    `<div class="outlabel" id="${id}">${label}</div><pre class="out" tabindex="0" aria-labelledby="${id}">${esc(text)}</pre>`;
+  /* 只要本次真的执行过一次检索（cmd 非空）就必须渲染输出块：
+     原先 `${out ? ... : ''}` 把空字符串当 falsy，整块不渲染，
+     玩家看到命令、看不到输出，分不清"没有输出"还是"页面没刷新" */
+  const ran = !!cmd;
   return layout('日志检索', `
 <div class="page">
   <div class="kicker">STAGE 05 · 运维</div>
@@ -501,12 +764,12 @@ function pageConsole(s, cmd, out, q) {
   <div class="panel">
     <form method="get" action="/s5">
       <div class="row">
-        <div><label>在日志里搜什么</label><input type="text" name="q" value="${esc(q || '')}" placeholder="nomad"></div>
+        <div><label for="f-q">在日志里搜什么</label><input id="f-q" type="text" name="q" value="${esc(q || '')}" placeholder="nomad"></div>
         <div style="flex:0 0 auto"><button class="btn solid" type="submit">检索</button></div>
       </div>
     </form>
-    ${cmd ? `<label style="margin-top:18px">实际执行的命令</label><pre class="out">${esc(cmd)}</pre>` : ''}
-    ${out ? `<label style="margin-top:6px">输出</label><pre class="out">${esc(out)}</pre>` : ''}
+    ${ran ? block('out-lbl-cmd', '实际执行的命令', cmd) : ''}
+    ${(ran || out) ? block('out-lbl-out', '输出', out || '（没有输出喵）') : ''}
     <div class="note">中间件是课长写的喵，本喵不敢改喵</div>
   </div>
   ${tipLink(5)}
@@ -579,10 +842,11 @@ function pageEnd(s) {
   <div class="kicker">ENDING</div>
   <h2>月亮很圆喵</h2>
   <div class="panel">
-    <div class="flagline">五笔都齐了喵：<br><br><code>${esc(FLAG)}</code></div>
+    <div class="outlabel" id="out-lbl-flag">完整 flag</div>
+    <div class="flagline" tabindex="0" aria-labelledby="out-lbl-flag">五笔都齐了喵：<br><br><code>${esc(FLAG)}</code></div>
   </div>
   <div class="ending">
-    <img src="/assets/ending.png" alt="">
+    <img class="lazy-img" src="/assets/ending.png" alt="" loading="lazy" decoding="async">
     <div class="say" style="margin:0">
       深夜真安静，月亮也很圆喵<br>
       啊，就剩最后一根了，本喵发誓以后再也不抽了（嘛，怎么可能）<br>
@@ -864,7 +1128,7 @@ async function handle(req, res) {
   if (p === '/end') return send(res, pageEnd(s));
   if (p === '/score') { res.writeHead(302, { Location: '/end' }); return res.end(); }
 
-  send(res, layout('404', '<div class="page"><h2>这里没有东西喵</h2><div class="say">本喵也不知道你要找什么喵</div></div>', s), 404);
+  send(res, layout('404', '<div class="page"><h2>这里没有东西喵</h2><div class="say">本喵也不知道你要找什么喵<br><span class="dim">文件被本喵藏起来了喵，桌面也擦干净了喵</span></div><div style="margin-top:24px"><a class="btn ghost" href="/">回首页喵</a></div></div>', s), 404);
 }
 
 /* 统一兜底：任何未预料的异常只影响这一个请求，不再把进程带走

@@ -6,3 +6,6 @@ data/
 WRITEUP.md
 DEPLOY.md
 ._*
+
+# 本地备份
+server.js.bak-*
