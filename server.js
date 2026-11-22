@@ -991,6 +991,12 @@ async function handle(req, res) {
   if (p === '/column') return send(res, pageColumn(s));
   if (p === '/lobby') return send(res, pageLobby(s, url.searchParams.get('msg') || ''));
 
+  if (p === '/version') return send(res, JSON.stringify({
+    build: process.env.BUILD_ID || '2026-11-22',
+    rev: '7903191',
+    uptime: Math.round(process.uptime()),
+    node: process.version,
+  }, null, 2), 200, 'application/json; charset=utf-8');
   if (p === '/robots.txt') return send(res, ROBOTS, 200, 'text/plain; charset=utf-8');
   if (p === '/backroom/notice.txt') return send(res, NOTICE, 200, 'text/plain; charset=utf-8');
 
