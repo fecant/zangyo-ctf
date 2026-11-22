@@ -220,6 +220,7 @@ pre.out{margin-top:16px;background:#080808;border:1px solid #242424;padding:14px
   padding:4px 9px;color:#9d9d9d;background:#0a0a0a}
 .chip.on{color:#fff;border-color:#666;background:#151515}
 .note{color:#8d8d8d;font-size:11.5px;margin-top:12px}
+.tagline{font-size:13.5px;color:#ededed;letter-spacing:.02em;line-height:1.6}
 .dim{color:#8d8d8d}
 .leak{background:#070707;border:1px solid #222;padding:16px;font-size:12.5px;color:#a8a8a8;
   font-family:ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;line-height:1.75}
@@ -452,6 +453,7 @@ const PAGE_BG = {
   '关于本喵': ['about.jpg', '50% 34%', .96],
   '结局': ['endbg.jpg', '50% 44%', .98],
   '404': ['404.jpg', '46% 30%', .96, .98],
+  '更新': ['about.jpg', '50% 42%', .9],
 };
 
 /* 每关右下角的“去问社长”入口 */
@@ -582,8 +584,8 @@ function pageHome(s) {
     <div class="s">状态：审批中（审批人是本喵）</div></div>
   <a class="card" href="/column"><div class="tag">专栏</div><div class="t">为什么大家都觉得是本喵的错喵</div>
     <div class="s">阅读 0 · 没有人关心喵 →</div></a>
-  <div class="card"><div class="tag">新功能</div><div class="t">全新的自我检讨模板 上架喵</div>
-    <div class="s">写了三行，第四行写不下去了喵</div></div>
+  <a class="card" href="/changelog"><div class="tag">新功能</div><div class="t">全新的自我检讨模板 上架喵</div>
+    <div class="s">写了三行，第四行写不下去了喵 →</div></a>
 </div>`, s);
 }
 
@@ -603,6 +605,37 @@ function pageColumn(s) {
     <p>……连💩都要跟我抢喵</p>
     <p>本喵明明什么都没有做错</p>
     <div class="jp">何もない、何もない、もう終わりだ、終わりだ、笑ったら殺すからね</div>
+  </div>
+</div>`, s);
+}
+
+/* ---------------- 更新记录（首页「新功能」卡片点进来的地方） ---------------- */
+function pageChangelog(s) {
+  const rows = [
+    ['11-22', '重置加班', '打卡页多了个按钮，五笔加班费一次清零，从头再被扣一遍喵'],
+    ['11-22', '版本探针', '/version 能直接看出这台机器跑的是哪一版喵'],
+    ['11-21', '入场重做', '慢了那么一点点，也错开了那么一点点，主视觉最后才亮喵'],
+    ['11-21', '到账与扫光', '加班费逐格到账，检索结果自上而下扫一遍喵'],
+    ['11-21', '404 缓焦', '找不到的页面会慢慢糊掉，并给了你一条回首页的路喵'],
+    ['11-20', '换了背景', '第五关和 404 的图都换过了喵，别再说本喵没审美喵'],
+    ['11-19', '提示页上线', '社长的办公室，一次只讲一条喵，贪多没有用喵'],
+  ];
+  return layout('更新', `
+<div class="page">
+  <div class="kicker">更新记录 · 本喵的加班日志</div>
+  <h2>重大更新！以后可以免费加班呢喵~</h2>
+  <div class="say">
+    以前加班要重开一个号喵，现在不用了喵，点一下就能从第一天重新开始喵<br>
+    <span class="dim">本喵已经把按钮放在打卡页了喵，别再问本喵放哪了喵</span>
+  </div>
+  <div class="panel">
+    <ul class="list">
+      ${rows.map(([d, t, c]) => `<li><span><b style="color:#fff;font-weight:600">${t}</b>　${c}</span><span class="id">${d}</span></li>`).join('')}
+    </ul>
+  </div>
+  <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
+    <a class="btn solid" href="/lobby">去打卡</a>
+    <a class="btn ghost" href="/">回首页</a>
   </div>
 </div>`, s);
 }
@@ -651,6 +684,17 @@ function pageLobby(s, msg) {
     </form>
     ${msg ? `<div class="outlabel" id="out-lbl-lobby">打卡结果</div><pre class="out" tabindex="0" aria-labelledby="out-lbl-lobby">${esc(msg)}</pre>` : ''}
     <div class="note">提示：机器不会告诉你密码喵，但机器也不懂得藏东西喵</div>
+  </div>
+  <div class="panel" style="margin-top:16px">
+    <div class="row" style="align-items:center">
+      <div style="flex:1;min-width:240px">
+        <div class="tagline">重大更新！以后可以免费加班呢喵~</div>
+        <div class="note" style="margin-top:8px">五笔加班费全清掉，回到第一天喵。本喵保证不拦你喵。</div>
+      </div>
+      <form method="post" action="/reset" style="flex:0 0 auto" onsubmit="return confirm('真要把五笔加班费全清掉、从头再被扣一遍喵？')">
+        <button class="btn ghost" type="submit">重置加班</button>
+      </form>
+    </div>
   </div>
   ${tipLink(1)}
   ${partsStrip(s)}
@@ -989,6 +1033,7 @@ async function handle(req, res) {
     return send(res, pageTips(s, n));
   }
   if (p === '/column') return send(res, pageColumn(s));
+  if (p === '/changelog') return send(res, pageChangelog(s));
   if (p === '/lobby') return send(res, pageLobby(s, url.searchParams.get('msg') || ''));
 
   if (p === '/version') return send(res, JSON.stringify({
@@ -1015,6 +1060,15 @@ async function handle(req, res) {
   <h2>HR 的目录喵</h2>
   <div class="say">早就搬空了喵，别在这儿耗着喵</div>
 </div>`, s), 403);
+  }
+
+  // 重置加班：清空全部进度，重新玩一遍
+  if (p === '/reset' && req.method === 'POST') {
+    s.user = null;
+    s.parts.clear();
+    s.files.length = 0;
+    res.writeHead(302, { Location: '/lobby?msg=' + encodeURIComponent('加班费已全部清零喵，重新打卡吧喵 —— 这回可别再迟到喵') });
+    return res.end();
   }
 
   // 登录
