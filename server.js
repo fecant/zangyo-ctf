@@ -221,6 +221,16 @@ pre.out{margin-top:16px;background:#080808;border:1px solid #242424;padding:14px
 .chip.on{color:#fff;border-color:#666;background:#151515}
 .note{color:#8d8d8d;font-size:11.5px;margin-top:12px}
 .tagline{font-size:13.5px;color:#ededed;letter-spacing:.02em;line-height:1.6}
+/* 站内确认弹窗：原生 confirm 的标题由宿主固定，改不了，也不合暗色风格 */
+.modal{position:fixed;inset:0;z-index:80;display:none;place-items:center;padding:24px;
+  background:rgba(6,6,6,.74);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.modal.on{display:grid}
+.modal-box{width:min(92vw,440px);background:#101010;border:1px solid #2e2e2e;padding:22px;
+  box-shadow:0 30px 90px rgba(0,0,0,.85)}
+.modal-title{font-size:11.5px;letter-spacing:.18em;color:#8d8d8d}
+.modal-text{margin-top:14px;font-size:15px;line-height:1.95;color:#ececec}
+.modal-text .dim{font-size:12.5px}
+.modal-actions{margin-top:24px;display:flex;gap:10px;justify-content:flex-end}
 .dim{color:#8d8d8d}
 .leak{background:#070707;border:1px solid #222;padding:16px;font-size:12.5px;color:#a8a8a8;
   font-family:ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;line-height:1.75}
@@ -518,6 +528,15 @@ for(var k=0;k<li.length;k++){(function(im){
 if(im.complete&&im.naturalWidth){im.classList.add('is-loaded')}else{
 im.addEventListener('load',function(){im.classList.add('is-loaded')},{once:!0});
 im.addEventListener('error',function(){im.classList.add('is-loaded')},{once:!0})}})(li[k])}
+var rf=document.getElementById('reset-form'),md=document.getElementById('reset-modal');
+if(rf&&md){var okb=md.querySelector('[data-act=ok]'),nob=md.querySelector('[data-act=cancel]');
+var mcl=function(){md.classList.remove('on')};
+rf.addEventListener('submit',function(e){if(md.classList.contains('on'))return;e.preventDefault();
+md.classList.add('on');try{okb.focus()}catch(_){}});
+okb.addEventListener('click',function(){mcl();rf.submit()});
+nob.addEventListener('click',mcl);
+md.addEventListener('click',function(e){if(e.target===md)mcl()});
+addEventListener('keydown',function(e){if(e.key==='Escape'&&md.classList.contains('on'))mcl()})}
 var b=document.querySelector('nav .brand');
 if(b){var nc=0,nt=0;b.onclick=function(){var w=Date.now();if(w-nt>1600)nc=0;nt=w;
 if(++nc<5)return;nc=0;var s=b.querySelector('#egg');
@@ -691,9 +710,19 @@ function pageLobby(s, msg) {
         <div class="tagline">重大更新！以后可以免费加班呢喵~</div>
         <div class="note" style="margin-top:8px">五笔加班费全清掉，回到第一天喵。本喵保证不拦你喵。</div>
       </div>
-      <form method="post" action="/reset" style="flex:0 0 auto" onsubmit="return confirm('真要把五笔加班费全清掉、从头再被扣一遍喵？')">
+      <form method="post" action="/reset" id="reset-form" style="flex:0 0 auto">
         <button class="btn ghost" type="submit">重置加班</button>
       </form>
+    </div>
+  </div>
+  <div class="modal" id="reset-modal">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="reset-title">
+      <div class="modal-title" id="reset-title">尼古喵</div>
+      <p class="modal-text">真要把五笔加班费全清掉、从头再被扣一遍喵？<br><span class="dim">清掉就找不回来了喵，本喵也没办法喵。</span></p>
+      <div class="modal-actions">
+        <button class="btn ghost" type="button" data-act="cancel">算了喵</button>
+        <button class="btn solid" type="button" data-act="ok">确定清空</button>
+      </div>
     </div>
   </div>
   ${tipLink(1)}
