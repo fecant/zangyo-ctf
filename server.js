@@ -1167,8 +1167,9 @@ async function handle(req, res) {
   if (p === '/lobby') return send(res, pageLobby(s, url.searchParams.get('msg') || ''));
 
   if (p === '/version') return send(res, JSON.stringify({
-    build: process.env.BUILD_ID || '2026-11-22',
-    rev: '7903191',
+    // 发布时手动同步这两个值（BUILD_ID / BUILD_REV 可被环境变量覆盖）
+    build: process.env.BUILD_ID || '2026-11-28',
+    rev: process.env.BUILD_REV || '677d204',
     uptime: Math.round(process.uptime()),
     node: process.version,
   }, null, 2), 200, 'application/json; charset=utf-8');
