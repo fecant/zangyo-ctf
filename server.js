@@ -1167,9 +1167,9 @@ async function handle(req, res) {
   if (p === '/lobby') return send(res, pageLobby(s, url.searchParams.get('msg') || ''));
 
   if (p === '/version') return send(res, JSON.stringify({
-    // 发布时手动同步这两个值（BUILD_ID / BUILD_REV 可被环境变量覆盖）
+    // 发布时手动同步 build（BUILD_ID 可被环境变量覆盖）。
+    // 不再返回 rev：提交号在这里永远是写死的一串，改一次就落后一次，比没有更糟。
     build: process.env.BUILD_ID || '2026-11-28',
-    rev: process.env.BUILD_REV || '677d204',
     uptime: Math.round(process.uptime()),
     node: process.version,
   }, null, 2), 200, 'application/json; charset=utf-8');
