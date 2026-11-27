@@ -674,8 +674,8 @@ function pageHome(s) {
   <div>
     <h1 class="big"><span class="ch">残</span><span class="ch">業</span></h1>
     <p class="lead">
-      一个关于打卡、报销、还有一点点无法解释的恶意的故事喵<br>
-      你只要顺着走就行，别问为什么喵，<em>反正问了也没有答案喵</em>
+      本喵负责打卡，你负责被扣钱喵<br>
+      嗝~<em>♡</em> 是心形的烟圈喵，<em>这一定是个好兆头喵！</em>
     </p>
     <div class="actions">
       <a class="btn solid" href="/lobby">开始受苦</a>
