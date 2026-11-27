@@ -47,7 +47,7 @@ const b64u = (x) => Buffer.from(x).toString('base64url');
 const mac = (body) => crypto.createHmac('sha256', SECRET).update(body).digest('base64url').slice(0, 22);
 
 function packSession(s) {
-  const base = { u: s.user ? 1 : 0, p: [...s.parts].sort((a, b) => a - b) };
+  const base = { u: s.user ? 1 : 0, p: [...s.parts].sort((a, b) => a - b), r: String(s.rid || '').slice(0, 16) };
   const files = s.files.slice(-8).map((f) => [String(f.name).slice(0, 80), String(f.content).slice(0, FILE_KEEP)]);
   // cookie 有 4KB 上限：超了就从最旧的文件开始丢，进度位永远保留
   for (let i = files.length; i >= 0; i--) {
@@ -67,6 +67,7 @@ function unpackSession(v) {
       user: o.u ? 'nomad' : null,
       parts: new Set(Array.isArray(o.p) ? o.p.filter((n) => n >= 1 && n <= 5) : []),
       files: Array.isArray(o.f) ? o.f.map(([name, content]) => ({ name, content })) : [],
+      rid: typeof o.r === 'string' && o.r ? o.r : null,
     };
   } catch (_) { return null; }
 }
@@ -76,32 +77,37 @@ function unpackSession(v) {
 const TRACE = new Map();
 const TRACE_KEEP = 12;
 const TRACE_SKIP = ['/assets/', '/favicon.ico', '/probe'];
-function traceKey(req) {
+/* 归组优先用会话里的稳定访客 id：同一出口 IP 的两个人不能看到彼此的记录
+   （否则一个人试出来的路径会直接漏给另一个人），拿不到会话时退回 IP+UA */
+function traceKey(req, s) {
+  if (s && s.rid) return 'r:' + s.rid;
   const ip = (req.socket && req.socket.remoteAddress) || '?';
   const ua = String(req.headers['user-agent'] || '').slice(0, 36);
-  return ip + '|' + ua;
+  return 'ip:' + ip + '|' + ua;
 }
-function tracePush(req, code) {
+function tracePush(req, code, s) {
   const path = String(req.url || '/').split('?')[0];
   if (TRACE_SKIP.some((x) => path.startsWith(x))) return;
-  const k = traceKey(req);
+  const k = traceKey(req, s);
   let arr = TRACE.get(k);
   if (!arr) { arr = []; TRACE.set(k, arr); }
   arr.push({ m: req.method || 'GET', p: path, c: code, t: Date.now() });
   if (arr.length > TRACE_KEEP) arr.shift();
   if (TRACE.size > 400) TRACE.delete(TRACE.keys().next().value);
 }
-const traceList = (req) => (TRACE.get(traceKey(req)) || []).slice().reverse();
+const traceList = (s) => (TRACE.get(traceKey(s.req, s)) || []).slice().reverse();
 
 function getSession(req, res) {
   const m = String(req.headers.cookie || '').match(/(?:^|;\s*)sid=([A-Za-z0-9._-]{8,4000})/);
   const s = (m && unpackSession(m[1])) || { user: null, parts: new Set(), files: [] };
+  // 访客 id 跟着会话走：sid 本身会随进度变化，不能拿它当键
+  if (!s.rid) s.rid = crypto.randomBytes(6).toString('base64url');
   // grant 发生在路由里，所以把写 cookie 的时机延迟到真正写响应头的那一刻
   const writeHead = res.writeHead.bind(res);
   res.writeHead = (code, headers) => {
     res.setHeader('Set-Cookie',
       `sid=${packSession(s)}; Path=/; Max-Age=1209600; HttpOnly; SameSite=Lax`);
-    try { tracePush(req, code); } catch (_) { }
+    try { tracePush(req, code, s); } catch (_) { }
     return writeHead(code, headers);
   };
   s.req = req;
@@ -539,7 +545,7 @@ function respBox(method, path, code, rid) {
 
 /* 流量台面板：不装工具也能看见「页面刚跟服务器说了什么」 */
 function tracePanel(s) {
-  const list = traceList(s.req);
+  const list = traceList(s);
   const rows = list.map((r) => {
     const t = new Date(r.t).toTimeString().slice(0, 8);
     return `<div class="trace-row"><span class="tm">${r.m}</span><span class="tp">${esc(r.p)}</span><span class="c${String(r.c)[0]}xx">${r.c}</span><span class="tm">${t}</span></div>`;
