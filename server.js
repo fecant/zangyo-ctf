@@ -71,6 +71,28 @@ function unpackSession(v) {
   } catch (_) { return null; }
 }
 
+/* ---------------- 流量台：记录本机最近几次请求（内存态，重启即清空） ----------------
+   目的不是替代 Burp，而是让不装工具的人也"看得见页面在跟服务器说什么" */
+const TRACE = new Map();
+const TRACE_KEEP = 12;
+const TRACE_SKIP = ['/assets/', '/favicon.ico', '/probe'];
+function traceKey(req) {
+  const ip = (req.socket && req.socket.remoteAddress) || '?';
+  const ua = String(req.headers['user-agent'] || '').slice(0, 36);
+  return ip + '|' + ua;
+}
+function tracePush(req, code) {
+  const path = String(req.url || '/').split('?')[0];
+  if (TRACE_SKIP.some((x) => path.startsWith(x))) return;
+  const k = traceKey(req);
+  let arr = TRACE.get(k);
+  if (!arr) { arr = []; TRACE.set(k, arr); }
+  arr.push({ m: req.method || 'GET', p: path, c: code, t: Date.now() });
+  if (arr.length > TRACE_KEEP) arr.shift();
+  if (TRACE.size > 400) TRACE.delete(TRACE.keys().next().value);
+}
+const traceList = (req) => (TRACE.get(traceKey(req)) || []).slice().reverse();
+
 function getSession(req, res) {
   const m = String(req.headers.cookie || '').match(/(?:^|;\s*)sid=([A-Za-z0-9._-]{8,4000})/);
   const s = (m && unpackSession(m[1])) || { user: null, parts: new Set(), files: [] };
@@ -79,6 +101,7 @@ function getSession(req, res) {
   res.writeHead = (code, headers) => {
     res.setHeader('Set-Cookie',
       `sid=${packSession(s)}; Path=/; Max-Age=1209600; HttpOnly; SameSite=Lax`);
+    try { tracePush(req, code); } catch (_) { }
     return writeHead(code, headers);
   };
   s.req = req;
@@ -91,8 +114,10 @@ const esc = (x) => String(x == null ? '' : x)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
-function send(res, body, code = 200, type = 'text/html; charset=utf-8') {
-  res.writeHead(code, { 'Content-Type': type, 'Cache-Control': 'no-store' });
+function send(res, body, code = 200, type = 'text/html; charset=utf-8', extra) {
+  const h = { 'Content-Type': type, 'Cache-Control': 'no-store' };
+  if (extra) for (const k in extra) h[k] = extra[k];
+  res.writeHead(code, h);
   res.end(body);
 }
 
@@ -231,6 +256,30 @@ pre.out{margin-top:16px;background:#080808;border:1px solid #242424;padding:14px
 .modal-text{margin-top:14px;font-size:15px;line-height:1.95;color:#ececec}
 .modal-text .dim{font-size:12.5px}
 .modal-actions{margin-top:24px;display:flex;gap:10px;justify-content:flex-end}
+/* 响应卡片：403/404 页把「这次请求发生了什么」摊开 */
+.resp{margin-top:26px;border:1px solid #2c2c2c;background:#0a0a0a;font-family:ui-monospace,Menlo,Consolas,monospace}
+.resp-line{display:flex;gap:12px;align-items:center;padding:11px 14px;border-bottom:1px solid #1e1e1e;font-size:12.5px}
+.resp-m{color:#8d8d8d;letter-spacing:.06em}
+.resp-p{color:#ececec;flex:1;min-width:0;word-break:break-all}
+.resp-c{font-weight:600}
+.c2xx{color:#8fbf9f}.c3xx{color:#c9c18b}.c4xx{color:#c98b8b}
+.resp-hd{padding:4px 14px 10px}
+.resp-hd div{display:flex;justify-content:space-between;gap:16px;padding:5px 0;border-bottom:1px dashed #1a1a1a;font-size:11.5px;color:#8d8d8d}
+.resp-hd div:last-child{border-bottom:none}
+.resp-hd div span:last-child{color:#b9b9b9;word-break:break-all;text-align:right}
+/* 流量台：本机最近的请求，用来替代「什么都没有，只能猜」 */
+.trace{margin-top:18px;border:1px solid #262626;background:rgba(8,8,8,.86)}
+.trace-hd{display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:10px 14px;border-bottom:1px solid #1e1e1e;font-size:10.5px;letter-spacing:.16em;color:#8d8d8d}
+.trace-row{display:grid;grid-template-columns:44px 1fr 48px 58px;gap:10px;padding:8px 14px;
+  border-bottom:1px solid #171717;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;color:#b9b9b9}
+.trace-row:last-of-type{border-bottom:none}
+.trace-row .tm{color:#6f6f6f;letter-spacing:.04em}
+.trace-row .tp{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.trace-empty{padding:16px 14px;font-size:12px;line-height:1.9;color:#7d7d7d}
+.trace-form{display:flex;gap:8px;padding:12px 14px;border-top:1px solid #1e1e1e}
+.trace-form input{flex:1;min-width:0;font-size:12px;padding:8px 10px}
+.trace-form button{flex:0 0 auto;padding:8px 14px;font-size:11.5px}
 .dim{color:#8d8d8d}
 .leak{background:#070707;border:1px solid #222;padding:16px;font-size:12.5px;color:#a8a8a8;
   font-family:ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;line-height:1.75}
@@ -463,6 +512,7 @@ const PAGE_BG = {
   '关于本喵': ['about.jpg', '50% 34%', .96],
   '结局': ['endbg.jpg', '50% 44%', .98],
   '404': ['404.jpg', '46% 30%', .96, .98],
+  '403': ['stage1.jpg', '50% 40%', .78],
   '更新': ['about.jpg', '50% 42%', .9],
 };
 
@@ -472,6 +522,37 @@ const tipLink = (n) => `
     <span>卡住了喵</span>
     <a class="btn ghost" href="/tips?n=${n}">去问社长</a>
   </div>`;
+
+/* 响应卡片：把"这次请求到底发生了什么"摊开给人看 */
+function respBox(method, path, code, rid) {
+  const c = `c${String(code)[0]}xx`;
+  return `<div class="resp">
+    <div class="resp-line"><span class="resp-m">${esc(method)}</span><span class="resp-p">${esc(path)}</span><span class="resp-c ${c}">${code}</span></div>
+    <div class="resp-hd">
+      <div><span>Content-Type</span><span>text/html; charset=utf-8</span></div>
+      <div><span>X-Request-Id</span><span>${esc(rid)}</span></div>
+      <div><span>X-Server</span><span>nomad-daily/1.2</span></div>
+      <div><span>Cache-Control</span><span>no-store</span></div>
+    </div>
+  </div>`;
+}
+
+/* 流量台面板：不装工具也能看见「页面刚跟服务器说了什么」 */
+function tracePanel(s) {
+  const list = traceList(s.req);
+  const rows = list.map((r) => {
+    const t = new Date(r.t).toTimeString().slice(0, 8);
+    return `<div class="trace-row"><span class="tm">${r.m}</span><span class="tp">${esc(r.p)}</span><span class="c${String(r.c)[0]}xx">${r.c}</span><span class="tm">${t}</span></div>`;
+  }).join('');
+  return `<div class="trace">
+    <div class="trace-hd"><span>流量台 · 本机 ${list.length} 条</span><span>只记你自己的喵</span></div>
+    ${rows || '<div class="trace-empty">还是空的喵。你在本站点过的每一下，都会落到这张单子上喵。</div>'}
+    <form class="trace-form" method="get" action="/probe">
+      <input name="p" aria-label="要试的路径" placeholder="比如 /backroom/ 后面接个名字喵">
+      <button class="btn ghost" type="submit">发一次</button>
+    </form>
+  </div>`;
+}
 
 function layout(title, body, s, bg) {
   const parts = [1, 2, 3, 4, 5].map((i) =>
@@ -691,7 +772,8 @@ function pageLobby(s, msg) {
   <h2>迟到的人请举手</h2>
   <div class="say">
     打卡机又坏了喵，修不修都一样，反正工资照扣喵<br>
-    你要是想进来，就自己找门喵，门这种东西，本喵从来不锁喵
+    你要是想进来，就自己找门喵，门这种东西，本喵从来不锁喵<br>
+    <span class="dim">本喵把每一趟来往都记在下面那张单子上喵，你自己看喵</span>
   </div>
   <div class="panel">
     <form method="post" action="/login">
@@ -725,6 +807,7 @@ function pageLobby(s, msg) {
       </div>
     </div>
   </div>
+  ${tracePanel(s)}
   ${tipLink(1)}
   ${partsStrip(s)}
 </div>`, s);
@@ -856,7 +939,8 @@ const TIPS = [
   [1, '打卡机', `哼 来了啊……才没等你<br>
     机器进门前要看张<b>告示</b> 就是给爬虫看的那种 叫 robots<br>
     上面写着禁止入内 禁止入内就是里面有宝物 神域常识<br>
-    <i>别问在哪 吾也不知道</i>`],
+    <i>别问在哪 吾也不知道</i><br>
+    <i>手改地址栏嫌烦的话 外面有种叫 Burp 的东西能把包摊开 不装也能过 吾懒得管</i>`],
   [2, '工资单', `工资单？吾也想查……不是 吾是说你堕落<br>
     只看自己那栏 傻 全局懂不懂 别人呢<br>
     别提权限 权限骗笨蛋的 你就是<br>
@@ -1076,19 +1160,35 @@ async function handle(req, res) {
 
   // robots 里列出的两个目录：目录确实存在（403 而不是 404），但都不给列索引
   if (p === '/backroom/' || p === '/backroom') {
+    const rid = crypto.randomBytes(4).toString('hex');
     return send(res, layout('403', `<div class="page">
-  <div class="kicker">403</div>
+  <div class="kicker">403 · FORBIDDEN</div>
   <h2>目录不给列喵</h2>
-  <div class="say">这个目录是有的喵，但本喵没开索引喵<br>
+  <div class="say">这个目录是有的喵，只是本喵没开索引喵<br>
   本喵给文件起的名字都很直白喵，你猜得到的喵</div>
-</div>`, s), 403);
+  ${respBox('GET', req.url, 403, rid)}
+  <div class="note">在地址栏把路径往后接一段就能试喵，试错了会告诉你错在哪喵</div>
+</div>`, s), 403, 'text/html; charset=utf-8',
+      { 'X-Request-Id': rid, 'X-Server': 'nomad-daily/1.2' });
   }
   if (p === '/hr/' || p === '/hr') {
+    const rid = crypto.randomBytes(4).toString('hex');
     return send(res, layout('403', `<div class="page">
-  <div class="kicker">403</div>
+  <div class="kicker">403 · FORBIDDEN</div>
   <h2>HR 的目录喵</h2>
   <div class="say">早就搬空了喵，别在这儿耗着喵</div>
-</div>`, s), 403);
+  ${respBox('GET', req.url, 403, rid)}
+</div>`, s), 403, 'text/html; charset=utf-8',
+      { 'X-Request-Id': rid, 'X-Server': 'nomad-daily/1.2' });
+  }
+  // 站内重发：把地址栏改路径这件事做成一个输入框（没有 Burp 也能试）
+  if (p === '/probe') {
+    let q = String(url.searchParams.get('p') || '').trim();
+    if (/^[a-z][a-z0-9+.-]*:\/\//i.test(q)) q = '';
+    if (q && !q.startsWith('/')) q = '/' + q;
+    const ok = /^\/[^\s\\]*$/.test(q) && !q.startsWith('//') && !q.includes('..');
+    res.writeHead(302, { Location: ok ? q : '/lobby?msg=' + encodeURIComponent('只能试站内的路径喵，外面的世界很危险喵') });
+    return res.end();
   }
 
   // 重置加班：清空全部进度，重新玩一遍
