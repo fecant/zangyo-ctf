@@ -551,10 +551,10 @@ function tracePanel(s) {
     return `<div class="trace-row"><span class="tm">${r.m}</span><span class="tp">${esc(r.p)}</span><span class="c${String(r.c)[0]}xx">${r.c}</span><span class="tm">${t}</span></div>`;
   }).join('');
   return `<div class="trace">
-    <div class="trace-hd"><span>流量台 · 本机 ${list.length} 条</span><span>只记你自己的喵</span></div>
-    ${rows || '<div class="trace-empty">还是空的喵。你在本站点过的每一下，都会落到这张单子上喵。</div>'}
+    <div class="trace-hd"><span>流量台 · ${list.length} 条</span></div>
+    ${rows || '<div class="trace-empty">还没有记录喵</div>'}
     <form class="trace-form" method="get" action="/probe">
-      <input name="p" aria-label="要试的路径" placeholder="比如 /backroom/ 后面接个名字喵">
+      <input type="text" name="p" aria-label="站内路径" placeholder="站内路径">
       <button class="btn ghost" type="submit">发一次</button>
     </form>
   </div>`;
@@ -718,22 +718,19 @@ function pageColumn(s) {
 /* ---------------- 更新记录（首页「新功能」卡片点进来的地方） ---------------- */
 function pageChangelog(s) {
   const rows = [
-    ['11-22', '重置加班', '打卡页多了个按钮，五笔加班费一次清零，从头再被扣一遍喵'],
-    ['11-22', '版本探针', '/version 能直接看出这台机器跑的是哪一版喵'],
-    ['11-21', '入场重做', '慢了那么一点点，也错开了那么一点点，主视觉最后才亮喵'],
-    ['11-21', '到账与扫光', '加班费逐格到账，检索结果自上而下扫一遍喵'],
-    ['11-21', '404 缓焦', '找不到的页面会慢慢糊掉，并给了你一条回首页的路喵'],
-    ['11-20', '换了背景', '第五关和 404 的图都换过了喵，别再说本喵没审美喵'],
-    ['11-19', '提示页上线', '社长的办公室，一次只讲一条喵，贪多没有用喵'],
+    ['11-22', '重置加班', '打卡页多了个按钮，五笔加班费一次清零'],
+    ['11-22', '版本探针', '/version 直接看这台机器跑的哪一版'],
+    ['11-21', '入场重做', '放慢并错开，主视觉最后才亮'],
+    ['11-21', '到账与扫光', '加班费逐格到账，检索结果自上而下扫一遍'],
+    ['11-21', '404 缓焦', '找不到的页面会慢慢糊掉'],
+    ['11-20', '换了背景', '第五关和 404 换了背景'],
+    ['11-19', '提示页上线', '社长的办公室，一次只讲一条'],
   ];
   return layout('更新', `
 <div class="page">
   <div class="kicker">更新记录 · 本喵的加班日志</div>
   <h2>重大更新！以后可以免费加班呢喵~</h2>
-  <div class="say">
-    以前加班要重开一个号喵，现在不用了喵，点一下就能从第一天重新开始喵<br>
-    <span class="dim">本喵已经把按钮放在打卡页了喵，别再问本喵放哪了喵</span>
-  </div>
+  <div class="say">以前加班要重开一个号喵，现在点一下就能从第一天重新开始喵</div>
   <div class="panel">
     <ul class="list">
       ${rows.map(([d, t, c]) => `<li><span><b style="color:#fff;font-weight:600">${t}</b>　${c}</span><span class="id">${d}</span></li>`).join('')}
@@ -777,9 +774,7 @@ function pageLobby(s, msg) {
   <div class="kicker">STAGE 01 · 打卡机</div>
   <h2>迟到的人请举手</h2>
   <div class="say">
-    打卡机又坏了喵，修不修都一样，反正工资照扣喵<br>
-    你要是想进来，就自己找门喵，门这种东西，本喵从来不锁喵<br>
-    <span class="dim">本喵把每一趟来往都记在下面那张单子上喵，你自己看喵</span>
+    打卡机又坏了喵，修不修都一样，反正工资照扣喵
   </div>
   <div class="panel">
     <form method="post" action="/login">
@@ -796,7 +791,7 @@ function pageLobby(s, msg) {
     <div class="row" style="align-items:center">
       <div style="flex:1;min-width:240px">
         <div class="tagline">重大更新！以后可以免费加班呢喵~</div>
-        <div class="note" style="margin-top:8px">五笔加班费全清掉，回到第一天喵。本喵保证不拦你喵。</div>
+        <div class="note" style="margin-top:8px">五笔加班费全清掉，回到第一天喵。</div>
       </div>
       <form method="post" action="/reset" id="reset-form" style="flex:0 0 auto">
         <button class="btn ghost" type="submit">重置加班</button>
@@ -945,8 +940,7 @@ const TIPS = [
   [1, '打卡机', `哼 来了啊……才没等你<br>
     机器进门前要看张<b>告示</b> 就是给爬虫看的那种 叫 robots<br>
     上面写着禁止入内 禁止入内就是里面有宝物 神域常识<br>
-    <i>别问在哪 吾也不知道</i><br>
-    <i>手改地址栏嫌烦的话 外面有种叫 Burp 的东西能把包摊开 不装也能过 吾懒得管</i>`],
+    <i>别问在哪 吾也不知道</i>`],
   [2, '工资单', `工资单？吾也想查……不是 吾是说你堕落<br>
     只看自己那栏 傻 全局懂不懂 别人呢<br>
     别提权限 权限骗笨蛋的 你就是<br>
@@ -1170,10 +1164,8 @@ async function handle(req, res) {
     return send(res, layout('403', `<div class="page">
   <div class="kicker">403 · FORBIDDEN</div>
   <h2>目录不给列喵</h2>
-  <div class="say">这个目录是有的喵，只是本喵没开索引喵<br>
-  本喵给文件起的名字都很直白喵，你猜得到的喵</div>
+  <div class="say">这个目录是有的喵，只是本喵没开索引喵</div>
   ${respBox('GET', req.url, 403, rid)}
-  <div class="note">在地址栏把路径往后接一段就能试喵，试错了会告诉你错在哪喵</div>
 </div>`, s), 403, 'text/html; charset=utf-8',
       { 'X-Request-Id': rid, 'X-Server': 'nomad-daily/1.2' });
   }
@@ -1323,7 +1315,7 @@ async function handle(req, res) {
   if (p === '/end') return send(res, pageEnd(s));
   if (p === '/score') { res.writeHead(302, { Location: '/end' }); return res.end(); }
 
-  send(res, layout('404', '<div class="page"><h2>这里没有东西喵</h2><div class="say">本喵也不知道你要找什么喵<br><span class="dim">文件被本喵藏起来了喵，桌面也擦干净了喵</span></div><div style="margin-top:24px"><a class="btn ghost" href="/">回首页喵</a></div></div>', s), 404);
+  send(res, layout('404', '<div class="page"><h2>这里没有东西喵</h2><div class="say">本喵也不知道你要找什么喵</div><div style="margin-top:24px"><a class="btn ghost" href="/">回首页喵</a></div></div>', s), 404);
 }
 
 /* 统一兜底：任何未预料的异常只影响这一个请求，不再把进程带走
