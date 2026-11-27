@@ -77,6 +77,10 @@ function unpackSession(v) {
 const TRACE = new Map();
 const TRACE_KEEP = 12;
 const TRACE_SKIP = ['/assets/', '/favicon.ico', '/probe'];
+/* 待回执：/probe 把"下一次该出现哪条请求"登记在这里，只有登记过的那一条才进记录。
+   这样面板里只留玩家自己发的，普通换页不会刷屏；爆破走外部工具时本来也不经过这里。 */
+const PEND = new Map();
+const PEND_TTL = 15000;
 /* 归组优先用会话里的稳定访客 id：同一出口 IP 的两个人不能看到彼此的记录
    （否则一个人试出来的路径会直接漏给另一个人），拿不到会话时退回 IP+UA */
 function traceKey(req, s) {
@@ -85,15 +89,28 @@ function traceKey(req, s) {
   const ua = String(req.headers['user-agent'] || '').slice(0, 36);
   return 'ip:' + ip + '|' + ua;
 }
-function tracePush(req, code, s) {
+function tracePush(req, code, s, headers, res) {
   const path = String(req.url || '/').split('?')[0];
   if (TRACE_SKIP.some((x) => path.startsWith(x))) return;
   const k = traceKey(req, s);
+  const pend = PEND.get(k);
+  if (!pend || Date.now() - pend.t > PEND_TTL || pend.path !== path) return;
   let arr = TRACE.get(k);
   if (!arr) { arr = []; TRACE.set(k, arr); }
   arr.push({ m: req.method || 'GET', p: path, c: code, t: Date.now() });
   if (arr.length > TRACE_KEEP) arr.shift();
   if (TRACE.size > 400) TRACE.delete(TRACE.keys().next().value);
+  // 3xx 继续跟一跳（例如 /robots → /robots.txt），让面板显示完整跳转链而不是半截
+  const h = headers && typeof headers === 'object' ? headers : null;
+  const loc = code >= 300 && code < 400
+    ? String((h && (h.Location || h.location)) || (res && res.getHeader && res.getHeader('Location')) || '')
+    : '';
+  const next = loc.split('?')[0];
+  if (loc && next.startsWith('/') && !next.startsWith('//') && (pend.hop || 0) < 2) {
+    PEND.set(k, { path: next, t: Date.now(), hop: (pend.hop || 0) + 1 });
+  } else {
+    PEND.delete(k);
+  }
 }
 const traceList = (s) => (TRACE.get(traceKey(s.req, s)) || []).slice().reverse();
 
@@ -107,7 +124,7 @@ function getSession(req, res) {
   res.writeHead = (code, headers) => {
     res.setHeader('Set-Cookie',
       `sid=${packSession(s)}; Path=/; Max-Age=1209600; HttpOnly; SameSite=Lax`);
-    try { tracePush(req, code, s); } catch (_) { }
+    try { tracePush(req, code, s, headers, res); } catch (_) { }
     return writeHead(code, headers);
   };
   s.req = req;
@@ -1155,6 +1172,7 @@ async function handle(req, res) {
     uptime: Math.round(process.uptime()),
     node: process.version,
   }, null, 2), 200, 'application/json; charset=utf-8');
+  if (p === '/robots') { res.writeHead(302, { Location: '/robots.txt' }); return res.end(); }
   if (p === '/robots.txt') return send(res, ROBOTS, 200, 'text/plain; charset=utf-8');
   if (p === '/backroom/notice.txt') return send(res, NOTICE, 200, 'text/plain; charset=utf-8');
 
@@ -1185,6 +1203,7 @@ async function handle(req, res) {
     if (/^[a-z][a-z0-9+.-]*:\/\//i.test(q)) q = '';
     if (q && !q.startsWith('/')) q = '/' + q;
     const ok = /^\/[^\s\\]*$/.test(q) && !q.startsWith('//') && !q.includes('..');
+    if (ok) PEND.set(traceKey(req, s), { path: q.split('?')[0], t: Date.now(), hop: 0 });
     res.writeHead(302, { Location: ok ? q : '/lobby?msg=' + encodeURIComponent('只能试站内的路径喵，外面的世界很危险喵') });
     return res.end();
   }
