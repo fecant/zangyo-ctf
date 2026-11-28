@@ -36,6 +36,15 @@ const PARTS = (() => {
 
 const PUBLIC = path.join(__dirname, 'public');
 
+/* ---------------- 云服务（WorkBuddy Cloud Service） ----------------
+ * 取值来自开通云服务时返回的 publicConfig，只在服务端持有、渲染时注入页面。
+ * endpoint 必须与站点自身的域名完全一致（服务端按 Origin 精确匹配）。 */
+const CLOUD = {
+  endpoint: 'https://zangyo-ctf.app.workbuddy.host',
+  oauthRelayBaseUrl: 'https://www.workbuddy.cn/v2/as/genie-baas/oauth',
+  publishableKey: 'wbpk_R705hsxtn6j4B2ibhK694X_kFJp8g3CJsFVkd3qfrcqgWoQJB6fl8Fx',
+};
+
 /* ---------------- 会话 ----------------
  * 进度（已登录 / 已拿到的碎片 / 已上传文件）全部签名后放进 cookie，
  * 服务端不存任何状态：进程重启、沙箱换实例、玩家关浏览器重进，进度都还在。
@@ -47,7 +56,7 @@ const b64u = (x) => Buffer.from(x).toString('base64url');
 const mac = (body) => crypto.createHmac('sha256', SECRET).update(body).digest('base64url').slice(0, 22);
 
 function packSession(s) {
-  const base = { u: s.user ? 1 : 0, p: [...s.parts].sort((a, b) => a - b), r: String(s.rid || '').slice(0, 16) };
+  const base = { u: s.user ? 1 : 0, p: [...s.parts].sort((a, b) => a - b), r: String(s.rid || '').slice(0, 16), t: Number(s.t0) || 0 };
   const files = s.files.slice(-8).map((f) => [String(f.name).slice(0, 80), String(f.content).slice(0, FILE_KEEP)]);
   // cookie 有 4KB 上限：超了就从最旧的文件开始丢，进度位永远保留
   for (let i = files.length; i >= 0; i--) {
@@ -68,6 +77,7 @@ function unpackSession(v) {
       parts: new Set(Array.isArray(o.p) ? o.p.filter((n) => n >= 1 && n <= 5) : []),
       files: Array.isArray(o.f) ? o.f.map(([name, content]) => ({ name, content })) : [],
       rid: typeof o.r === 'string' && o.r ? o.r : null,
+      t0: Number(o.t) || 0,
     };
   } catch (_) { return null; }
 }
@@ -119,6 +129,8 @@ function getSession(req, res) {
   const s = (m && unpackSession(m[1])) || { user: null, parts: new Set(), files: [] };
   // 访客 id 跟着会话走：sid 本身会随进度变化，不能拿它当键
   if (!s.rid) s.rid = crypto.randomBytes(6).toString('base64url');
+  // 第一次进站的时间，用来算通关用时（跟着会话走，换浏览器就重算）
+  if (!s.t0) s.t0 = Date.now();
   // grant 发生在路由里，所以把写 cookie 的时机延迟到真正写响应头的那一刻
   const writeHead = res.writeHead.bind(res);
   res.writeHead = (code, headers) => {
@@ -301,6 +313,8 @@ pre.out{margin-top:16px;background:#080808;border:1px solid #242424;padding:14px
 .trace-row .tp{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .trace-empty{padding:16px 14px;font-size:12px;line-height:1.9;color:#7d7d7d}
 .trace-form{display:flex;gap:8px;padding:12px 14px;border-top:1px solid #1e1e1e}
+/* display:flex 会盖掉 [hidden] 的 UA 样式，得显式收回来 */
+.trace-form[hidden]{display:none}
 .trace-form input{flex:1;min-width:0;font-size:12px;padding:8px 10px}
 .trace-form button{flex:0 0 auto;padding:8px 14px;font-size:11.5px}
 .dim{color:#8d8d8d}
@@ -1011,6 +1025,7 @@ function pageEnd(s) {
   ${partsStrip(s)}
 </div>`, s);
   }
+  const secs = Math.max(0, Math.min(604800, Math.round((Date.now() - (s.t0 || Date.now())) / 1000)));
   return layout('结局', `
 <div class="page">
   <div class="kicker">ENDING</div>
@@ -1028,8 +1043,55 @@ function pageEnd(s) {
       尼古万岁喵...咳咳
     </div>
   </div>
+  <div class="panel" id="board-panel">
+    <div class="outlabel">值班表</div>
+    <ul class="list" id="board-list"><li class="dim">读取中喵…</li></ul>
+    <form class="trace-form" id="board-form" hidden>
+      <input type="text" id="board-name" maxlength="12" placeholder="名字">
+      <button class="btn ghost" type="submit">记一笔</button>
+    </form>
+  </div>
   ${partsStrip(s)}
-</div>`, s);
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@tencent-ai/workbuddy-cloud-sdk@dev/lib/index.global.js"></script>
+<script>
+(function(){
+  var CFG=${JSON.stringify(CLOUD)},SECS=${secs};
+  var list=document.getElementById('board-list'),form=document.getElementById('board-form'),input=document.getElementById('board-name');
+  var panel=document.getElementById('board-panel');
+  function say(t){if(list)list.innerHTML='<li class="dim">'+t+'</li>';}
+  // 云服务按 Origin 精确匹配：站点挂在别的域名下（例如 CTF 平台实例）时直接不显示，不留一句报错
+  try{if(new URL(CFG.endpoint).host!==location.host){if(panel)panel.style.display='none';return;}}catch(e){}
+  if(!list||!form||!input||!window.WorkBuddyCloud)return say('值班表没连上喵');
+  var cloud;
+  try{cloud=WorkBuddyCloud.createWorkBuddyCloud({endpoint:CFG.endpoint,oauthRelayBaseUrl:CFG.oauthRelayBaseUrl,publishableKey:CFG.publishableKey});}
+  catch(e){return say('值班表没连上喵');}
+  function esc(x){return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function mmss(n){n=Math.max(0,n|0);var m=Math.floor(n/60),r=n%60;return m+':'+(r<10?'0':'')+r;}
+  function paint(rows){
+    if(!rows||!rows.length)return say('还没有人记喵');
+    list.innerHTML=rows.map(function(r){return '<li><span>'+esc(r.name)+'</span><span class="id">'+mmss(r.seconds)+'</span></li>';}).join('');
+  }
+  function load(){
+    return cloud.database.from('zangyo_finish').select('name,seconds').order('seconds',{ascending:true}).limit(10)
+      .then(function(r){if(r.error)throw r.error;paint(r.data);form.hidden=false;})
+      .catch(function(){say('值班表没连上喵');});
+  }
+  load();
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    if(form.dataset.busy==='1')return;
+    var name=String(input.value||'').trim().slice(0,12);
+    if(!name){input.focus();return;}
+    form.dataset.busy='1';
+    var btn=form.querySelector('button');if(btn)btn.disabled=true;
+    cloud.database.from('zangyo_finish').insert({name:name,seconds:SECS})
+      .then(function(r){if(r.error)throw r.error;return load();})
+      .then(function(){input.value='';form.hidden=true;if(btn)btn.disabled=false;})
+      .catch(function(){say('没记上喵，再试一次');if(btn)btn.disabled=false;form.dataset.busy='';});
+  });
+})();
+</script>`, s);
 }
 
 /* ---------------- 第 1 关的材料 ---------------- */
